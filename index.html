@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050816">
+<title>Hunter System</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050816;color:#eef4ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}
+.app{max-width:480px;margin:auto;min-height:100vh;padding:18px 16px 90px;background:radial-gradient(circle at 50% -10%,#182b62,transparent 38%),#050816}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-size:13px;font-weight:800;letter-spacing:.18em}.gear{background:#0b1228;border:1px solid #263a65;color:white;border-radius:12px;width:40px;height:40px}
+.hero{padding:20px;border:1px solid #304777;border-radius:24px;background:linear-gradient(145deg,#111e42,#080e20);box-shadow:0 20px 55px #0008}
+.profile{display:flex;gap:13px;align-items:center}.avatar{width:64px;height:64px;border-radius:19px;display:grid;place-items:center;background:#101d3c;border:1px solid #4a6da7;font-size:27px}.rank{font-size:10px;color:#9ec5ff;letter-spacing:.2em}.level{font-size:29px;font-weight:900}.muted{font-size:10px;color:#8495b8}.bar{height:8px;background:#182645;border-radius:9px;overflow:hidden;margin-top:8px}.fill{height:100%;width:0;background:linear-gradient(90deg,#66aaff,#9b79ff);transition:.3s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.stat{padding:11px 5px;text-align:center;border:1px solid #20345d;border-radius:14px;background:#070e21aa}.stat b{font-size:19px;display:block}.stat span{font-size:8px;color:#8294b8;letter-spacing:.08em}
+section{margin-top:19px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h2{font-size:12px;letter-spacing:.15em;margin:0}.head small{color:#8faedb}
+.quest{display:flex;gap:11px;align-items:center;padding:13px;border:1px solid #24375e;background:#0a1125;border-radius:16px;margin:8px 0}.check{width:29px;height:29px;flex:0 0 29px;border-radius:9px;border:1px solid #405a89;background:#080f21;color:white}.check.done{background:linear-gradient(135deg,#40d89d,#4c8cff);border:0}.q{flex:1}.q b{font-size:13px}.q small{display:block;color:#8294b8;font-size:9px;margin-top:3px}.xp{font-size:10px;color:#9ec5ff}
+.card{border:1px solid #24375e;border-radius:17px;background:#0a1125;padding:14px}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{text-align:center;color:#8294b8;font-size:9px}.dot{height:35px;margin-top:5px;border-radius:9px;background:#080f21;border:1px solid #23375d;display:grid;place-items:center}.dot.done{background:#315da6;border-color:#6789d0;color:white}
+.form{display:flex;gap:7px}.form input{min-width:0;flex:1;background:#070d1e;color:white;border:1px solid #263b65;border-radius:12px;padding:11px}.form button{border:0;border-radius:12px;background:linear-gradient(135deg,#477fe2,#7253c8);color:white;font-weight:800;padding:0 15px}
+.page{display:none}.page.active{display:block}.achievement{display:flex;gap:12px;align-items:center;border:1px solid #24375e;border-radius:15px;background:#0a1125;padding:13px;margin:8px 0}.badge{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#122144}.achievement b{font-size:12px}.achievement small{display:block;color:#8294b8;font-size:9px;margin-top:3px}.locked{opacity:.4}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);height:70px;background:#070d20f5;border-top:1px solid #20345b;display:grid;grid-template-columns:repeat(3,1fr);padding:7px 12px calc(7px + env(safe-area-inset-bottom));z-index:5}.nav{border:0;background:none;color:#6e81a7;border-radius:11px;font-size:9px}.nav span{display:block;font-size:18px}.nav.active{color:#a8caff;background:#101d3d}
+</style>
+</head>
+<body><div class="app">
+<header><div class="brand">◈ HUNTER SYSTEM</div><button class="gear" id="reset">↻</button></header>
+
+<div id="home" class="page active">
+<div class="hero">
+<div class="profile"><div class="avatar">◈</div><div><div class="rank" id="rank">RANK E</div><div class="level" id="level">LEVEL 1</div><div class="muted" id="xptext">0 / 100 XP</div></div></div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="stats"><div class="stat"><b id="streak">0</b><span>STREAK</span></div><div class="stat"><b id="percent">0%</b><span>TODAY</span></div><div class="stat"><b id="count">0</b><span>QUESTS</span></div></div>
+</div>
+<section><div class="head"><h2>DAILY QUESTS</h2><small id="date"></small></div><div id="quests"></div></section>
+<section><div class="head"><h2>WEEKLY PROGRESS</h2><small>7 DAYS</small></div><div class="card"><div class="week" id="week"></div></div></section>
+<section><div class="head"><h2>NEW QUEST</h2></div><div class="form"><input id="input" placeholder="Ex. Read 20 minutes"><button id="add">ADD</button></div></section>
+</div>
+
+<div id="stats" class="page"><section><div class="head"><h2>PLAYER ANALYSIS</h2></div><div class="card"><div class="head"><b>TOTAL XP</b><small id="totalxp">0 XP</small></div><div class="bar"><div class="fill" id="allfill"></div></div></div></section><section><div class="head"><h2>ACHIEVEMENTS</h2></div><div id="achievements"></div></section></div>
+
+<div id="profile" class="page"><section><div class="hero"><div class="profile"><div class="avatar">◈</div><div><div class="rank" id="rank2">RANK E</div><div class="level" id="level2">LEVEL 1</div><div class="muted">Keep completing quests.</div></div></div></div></section><section><div class="card"><b>HUNTER SYSTEM</b><p class="muted">Your progress is saved locally in this browser. No account is required.</p></div></section></div>
+</div>
+
+<nav><button class="nav active" data-p="home"><span>⌂</span>HOME</button><button class="nav" data-p="stats"><span>◒</span>STATS</button><button class="nav" data-p="profile"><span>◉</span>PROFILE</button></nav>
+
+<script>
+const K="hunter-system-v2";let s=JSON.parse(localStorage.getItem(K)||"null")||{xp:0,quests:[["Read 20 minutes",10],["Study 30 minutes",15],["Practice a skill",15],["Tidy my workspace",10]].map((x,i)=>({id:i,name:x[0],xp:x[1]})),done:{}};
+const key=d=>{let x=new Date(d),m=String(x.getMonth()+1).padStart(2,"0"),day=String(x.getDate()).padStart(2,"0");return x.getFullYear()+"-"+m+"-"+day},today=()=>key(new Date());
+const rank=l=>l>=40?"RANK S":l>=30?"RANK A":l>=20?"RANK B":l>=10?"RANK C":l>=5?"RANK D":"RANK E";
+const esc=x=>x.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function has(d){let k=key(d);return s.quests.some(q=>s.done[k+":"+q.id])}
+function streak(){let d=new Date(),n=0;if(!has(d))return 0;while(has(d)){n++;d.setDate(d.getDate()-1)}return n}
+function render(){
+ let l=Math.floor(s.xp/100)+1,c=s.xp%100,k=today(),done=s.quests.filter(q=>s.done[k+":"+q.id]).length,p=s.quests.length?Math.round(done/s.quests.length*100):0;
+ document.querySelectorAll("#level,#level2").forEach(e=>e.textContent="LEVEL "+l);document.querySelectorAll("#rank,#rank2").forEach(e=>e.textContent=rank(l));
+ xptext.textContent=c+" / 100 XP";fill.style.width=c+"%";streakEl.textContent=streak();percent.textContent=p+"%";count.textContent=s.quests.length;
+ date.textContent=new Date().toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"});
+ quests.innerHTML=s.quests.length?"":"<div class='empty'>No quests yet.</div>";
+ s.quests.forEach(q=>{let d=!!s.done[k+":"+q.id],e=document.createElement("div");e.className="quest";e.innerHTML=`<button class="check ${d?"done":""}">${d?"✓":""}</button><div class="q"><b>${esc(q.name)}</b><small>${d?"Mission accomplie":"Mission en attente"}</small></div><span class="xp">+${q.xp} XP</span>`;e.querySelector("button").onclick=()=>toggle(q.id);quests.appendChild(e)});
+ week.innerHTML="";let b=new Date(),o=b.getDay()===0?-6:1-b.getDay(),m=new Date(b);m.setDate(b.getDate()+o);for(let i=0;i<7;i++){let d=new Date(m);d.setDate(m.getDate()+i);week.innerHTML+=`<div class="day">${d.toLocaleDateString("fr-FR",{weekday:"short"}).slice(0,3)}<div class="dot ${has(d)?"done":""}">${has(d)?"✓":d.getDate()}</div></div>`}
+ totalxp.textContent=s.xp+" XP";allfill.style.width=(s.xp%100)+"%";achievements.innerHTML="";[["🏆","First Step","Complete a quest",s.xp>=10],["⭐","Level Up","Reach 100 XP",s.xp>=100],["🔥","Consistency","3 day streak",streak()>=3],["👑","Hunter","Reach 500 XP",s.xp>=500]].forEach(a=>achievements.innerHTML+=`<div class="achievement ${a[3]?"":"locked"}"><div class="badge">${a[0]}</div><div><b>${a[1]}</b><small>${a[2]}</small></div></div>`)
+}
+function toggle(id){let k=today()+":"+id,q=s.quests.find(x=>x.id===id);if(s.done[k]){delete s.done[k];s.xp=Math.max(0,s.xp-q.xp)}else{s.done[k]=1;s.xp+=q.xp}localStorage.setItem(K,JSON.stringify(s));render()}
+add.onclick=()=>{let n=input.value.trim();if(!n)return;s.quests.push({id:Date.now(),name:n,xp:10});input.value="";localStorage.setItem(K,JSON.stringify(s));render()};input.onkeydown=e=>{if(e.key==="Enter")add.click()};
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.p).classList.add("active")});
+reset.onclick=()=>{if(confirm("Reset all progress?")){localStorage.removeItem(K);location.reload()}};const streakEl=document.getElementById("streak");render();
+</script></body></html>
